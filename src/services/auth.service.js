@@ -3,6 +3,37 @@ const User = require("../models/User");
 const bcrypt = require("../helpers/bcrypt");
 const auth = require("../authentication/authentication");
 
+const signIn = async (user) => {
+  try {
+    const account = await User.findOne({
+      email: user.email,
+    });
+
+    if (account == null)
+      return {
+        status: false,
+        message: "account not already exist!",
+      };
+
+    const isValid = await bcrypt.compareHash(user.password, account.password);
+    if (!isValid) throw new ApiError(500, "wrong password");
+
+    // encode token
+    const token = auth.signAccessToken(account._id);
+    const refreshToken = auth.signRefreshToken(account._id);
+
+    return {
+      status: true,
+      data: account,
+      token,
+      refreshToken,
+      message: "sign in!",
+    };
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};
+
 const signUp = async (user) => {
   try {
     const checkUser = await User.findOne({ email: user.email });
@@ -32,5 +63,6 @@ const signUp = async (user) => {
 };
 
 module.exports = {
+  signIn,
   signUp,
 };

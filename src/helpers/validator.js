@@ -37,7 +37,7 @@ const schemas = {
   userOptionalSchema: Joi.object().keys({
     email: Joi.string().email().lowercase(),
     password: Joi.string().min(4).max(32),
-    name: Joi.string().trim().required(),
+    name: Joi.string().trim(),
   }),
 };
 
