@@ -3,6 +3,7 @@ var morgan = require("morgan");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const userRouter = require("./routes/user.router");
+const authRouter = require("./routes/auth.router");
 
 // error
 const { errorHandlingMiddleware } = require("./middlewares/errorHandling");
@@ -23,11 +24,12 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.use("/api/user", userRouter);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/auth", authRouter);
 
 // Middleware error handling
 app.use(errorHandlingMiddleware);
 
 app.listen(port, () => {
-  console.log(`app listening on port localhost:${port}`);
+  // console.log(`app listening on port localhost:${port}`);
 });

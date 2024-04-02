@@ -15,6 +15,15 @@ const bcryptHash = async (data) => {
   }
 };
 
+const compareHash = async (data, hashed) => {
+  try {
+    return await bcrypt.compare(data, hashed);
+  } catch (error) {
+    throw new ApiError(400, error.message);
+  }
+};
+
 module.exports = {
   bcryptHash,
+  compareHash,
 };
