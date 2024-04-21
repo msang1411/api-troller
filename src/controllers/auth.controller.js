@@ -7,15 +7,17 @@ const signIn = async (req, res, next) => {
       res.setHeader("Authorization", result.token);
 
       return res.status(200).json({
-        status: 200,
+        statusCode: 200,
         message: "account has been sign in",
         token: result.token,
         refreshToken: result.refreshToken,
+        user: result.data,
       });
     } else
-      return res
-        .status(403)
-        .json({ status: 403, message: "that account already not exists !" });
+      return res.status(403).json({
+        statusCode: 403,
+        message: "that account already not exists !",
+      });
   } catch (error) {
     next(error);
   }

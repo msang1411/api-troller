@@ -5,7 +5,7 @@ const authController = require("../controllers/auth.controller");
 
 router
   .route("/sign-in")
-  .get(userValidate(schemas.userOptionalSchema), authController.signIn);
+  .post(userValidate(schemas.userOptionalSchema), authController.signIn);
 
 router
   .route("/sign-up")
