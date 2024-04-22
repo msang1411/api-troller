@@ -40,11 +40,13 @@ const signRefreshToken = (accountId) => {
 
 // verify token
 const verifyAccessToken = (req, res, next) => {
+  console.log("header: ", req.headers);
   if (!req.headers.authorization)
     return next(new ApiError(401, "Unauthorized"));
   const authHeader = req.headers.authorization;
   const bearerToken = authHeader.split(" ");
   const token = bearerToken[1];
+  console.log("token: ", token);
 
   // start verify token
   JWT.verify(token, ACCESS_TOKEN_SECRET, (err, payload) => {
