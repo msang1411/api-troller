@@ -12,6 +12,19 @@ const checkTokenExpired = async (token) => {
   }
 };
 
+const refreshToken = async (refreshToken) => {
+  try {
+    if (!refreshToken)
+      throw new ApiError(500, `request don't have refreshToken`);
+    const { sub } = await auth.verifyRefreshToken(refreshToken);
+    const newAccessToken = auth.signAccessToken(sub);
+    const newRefreshToken = auth.signRefreshToken(sub);
+    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+  } catch (error) {
+    throw new ApiError(400, error.message);
+  }
+};
+
 const signIn = async (user) => {
   try {
     const account = await User.findOne({
@@ -73,6 +86,7 @@ const signUp = async (user) => {
 
 module.exports = {
   checkTokenExpired,
+  refreshToken,
   signIn,
   signUp,
 };

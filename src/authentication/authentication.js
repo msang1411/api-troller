@@ -5,11 +5,11 @@ const {
 const JWT = require("jsonwebtoken");
 const ApiError = require("../utils/ApiError");
 
-const signAccessToken = (accountId) => {
+const signAccessToken = (userId) => {
   try {
     return JWT.sign(
       {
-        sub: accountId,
+        sub: userId,
       },
       ACCESS_TOKEN_SECRET,
       {
@@ -22,11 +22,11 @@ const signAccessToken = (accountId) => {
 };
 
 // refresh token
-const signRefreshToken = (accountId) => {
+const signRefreshToken = (userId) => {
   try {
     return JWT.sign(
       {
-        sub: accountId,
+        sub: userId,
       },
       REFRESH_TOKEN_SECRET,
       {
@@ -78,15 +78,18 @@ const isAccessTokenExpired = async (bearerToken) => {
 };
 
 const verifyRefreshToken = (refreshToken) => {
-  JWT.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, payload) => {
-    if (err) {
-      if (err.name === "JsonWebTokenError") {
-        return next(new ApiError(401, "Unauthorized"));
+  return new Promise((resolve, reject) => {
+    JWT.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, payload) => {
+      if (err) {
+        if (err.name === "JsonWebTokenError") {
+          reject(new ApiError(401, "Unauthorized"));
+        } else {
+          reject(new ApiError(402, err.message));
+        }
+      } else {
+        resolve(payload);
       }
-      // Error token expired
-      next(new ApiError(402, err.message));
-    }
-    return payload;
+    });
   });
 };
 

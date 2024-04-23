@@ -17,6 +17,23 @@ const checkTokenExpired = async (req, res, next) => {
     next(error);
   }
 };
+
+const refreshToken = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken)
+      throw new ApiError(500, `request don't have refreshToken`);
+    const token = await authService.refreshToken(refreshToken);
+    return res.status(200).json({
+      statusCode: 200,
+      accessToken: token.accessToken,
+      refreshToken: token.refreshToken,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const signIn = async (req, res, next) => {
   try {
     const result = await authService.signIn(req.value.body);
@@ -66,6 +83,7 @@ const signUp = async (req, res, next) => {
 
 module.exports = {
   checkTokenExpired,
+  refreshToken,
   signIn,
   signUp,
 };
