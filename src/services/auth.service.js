@@ -3,6 +3,15 @@ const User = require("../models/User");
 const bcrypt = require("../helpers/bcrypt");
 const auth = require("../authentication/authentication");
 
+const checkTokenExpired = async (token) => {
+  try {
+    const isTokenExpired = await auth.isAccessTokenExpired(token);
+    return isTokenExpired;
+  } catch (error) {
+    throw new ApiError(error.statusCode, error.message);
+  }
+};
+
 const signIn = async (user) => {
   try {
     const account = await User.findOne({
@@ -63,6 +72,7 @@ const signUp = async (user) => {
 };
 
 module.exports = {
+  checkTokenExpired,
   signIn,
   signUp,
 };

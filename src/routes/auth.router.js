@@ -3,6 +3,8 @@ const router = express.Router();
 const { schemas, userValidate } = require("../helpers/validator");
 const authController = require("../controllers/auth.controller");
 
+router.route("/check-access-token").get(authController.checkTokenExpired);
+
 router
   .route("/sign-in")
   .post(userValidate(schemas.userOptionalSchema), authController.signIn);

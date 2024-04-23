@@ -13,7 +13,7 @@ const signAccessToken = (accountId) => {
       },
       ACCESS_TOKEN_SECRET,
       {
-        expiresIn: "3 days",
+        expiresIn: "1 days",
       }
     );
   } catch (error) {
@@ -40,13 +40,11 @@ const signRefreshToken = (accountId) => {
 
 // verify token
 const verifyAccessToken = (req, res, next) => {
-  console.log("header: ", req.headers);
   if (!req.headers.authorization)
     return next(new ApiError(401, "Unauthorized"));
   const authHeader = req.headers.authorization;
   const bearerToken = authHeader.split(" ");
   const token = bearerToken[1];
-  console.log("token: ", token);
 
   // start verify token
   JWT.verify(token, ACCESS_TOKEN_SECRET, (err, payload) => {
@@ -58,6 +56,24 @@ const verifyAccessToken = (req, res, next) => {
     }
     req.payload = payload;
     next();
+  });
+};
+
+const isAccessTokenExpired = async (bearerToken) => {
+  const token = bearerToken.split(" ")[1];
+  return await new Promise((resolve, reject) => {
+    JWT.verify(token, ACCESS_TOKEN_SECRET, (err) => {
+      if (err) {
+        // Another error
+        if (err.name === "JsonWebTokenError") {
+          reject(new ApiError(400, err.message));
+        }
+        // Error token expired
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
   });
 };
 
@@ -78,5 +94,6 @@ module.exports = {
   signAccessToken,
   signRefreshToken,
   verifyAccessToken,
+  isAccessTokenExpired,
   verifyRefreshToken,
 };

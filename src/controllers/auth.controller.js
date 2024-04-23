@@ -1,5 +1,22 @@
 const authService = require("../services/auth.service");
 
+const checkTokenExpired = async (req, res, next) => {
+  try {
+    const isTokenExpired = await authService.checkTokenExpired(
+      req.headers.authorization
+    );
+
+    return res.status(200).json({
+      statusCode: 200,
+      isTokenExpired,
+      message: isTokenExpired
+        ? "Token has expired!"
+        : "Token have not expired!",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 const signIn = async (req, res, next) => {
   try {
     const result = await authService.signIn(req.value.body);
@@ -48,6 +65,7 @@ const signUp = async (req, res, next) => {
 };
 
 module.exports = {
+  checkTokenExpired,
   signIn,
   signUp,
 };
