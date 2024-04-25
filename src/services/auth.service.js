@@ -41,13 +41,13 @@ const signIn = async (user) => {
     if (!isValid) throw new ApiError(500, "wrong password");
 
     // encode token
-    const token = auth.signAccessToken(account._id);
+    const accessToken = auth.signAccessToken(account._id);
     const refreshToken = auth.signRefreshToken(account._id);
 
     return {
       status: true,
       data: account,
-      token,
+      accessToken,
       refreshToken,
       message: "sign in!",
     };
@@ -74,7 +74,6 @@ const signUp = async (user) => {
 
       return {
         status: true,
-        user,
         accessToken,
         refreshToken,
       };

@@ -38,12 +38,12 @@ const signIn = async (req, res, next) => {
   try {
     const result = await authService.signIn(req.value.body);
     if (result.status) {
-      res.setHeader("Authorization", result.token);
+      res.setHeader("Authorization", result.accessToken);
 
       return res.status(200).json({
         statusCode: 200,
         message: "account has been sign in",
-        token: result.token,
+        accessToken: result.accessToken,
         refreshToken: result.refreshToken,
         user: result.data,
       });
@@ -63,14 +63,13 @@ const signUp = async (req, res, next) => {
 
     if (result.status === false)
       return res.status(400).json({
-        status: 400,
+        statusCode: 400,
         message: "email has been exist",
       });
 
     return res.status(200).json({
-      status: 200,
+      statusCode: 200,
       data: {
-        data: result.user,
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
       },
