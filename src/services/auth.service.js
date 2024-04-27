@@ -29,7 +29,7 @@ const signIn = async (user) => {
   try {
     const account = await User.findOne({
       email: user.email,
-    });
+    }).lean();
 
     if (account == null)
       return {
@@ -39,6 +39,7 @@ const signIn = async (user) => {
 
     const isValid = await bcrypt.compareHash(user.password, account.password);
     if (!isValid) throw new ApiError(500, "wrong password");
+    delete account.password;
 
     // encode token
     const accessToken = auth.signAccessToken(account._id);

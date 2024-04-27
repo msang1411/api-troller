@@ -6,6 +6,7 @@ const cors = require("cors");
 const { corsOptions } = require("./configs/cors");
 const userRouter = require("./routes/user.router");
 const authRouter = require("./routes/auth.router");
+const boardRouter = require("./routes/board.router");
 
 // error
 const { errorHandlingMiddleware } = require("./middlewares/errorHandling");
@@ -25,12 +26,9 @@ app.use(cors(corsOptions));
 require("./db/mongodb");
 
 // Routers
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/board", boardRouter);
 
 // Middleware error handling
 app.use(errorHandlingMiddleware);
