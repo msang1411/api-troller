@@ -4,7 +4,6 @@ const ApiError = require("../utils/ApiError.js");
 
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log("wtf: ", origin);
     // allow postman (postman's origin = undefined) if environment = dev
     if (!origin && process.env.BUILD_MODE === "dev") {
       return callback(null, true);
