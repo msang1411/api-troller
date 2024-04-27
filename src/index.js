@@ -2,6 +2,8 @@ const express = require("express");
 var morgan = require("morgan");
 const bodyParser = require("body-parser");
 require("dotenv").config();
+const cors = require("cors");
+const { corsOptions } = require("./configs/cors");
 const userRouter = require("./routes/user.router");
 const authRouter = require("./routes/auth.router");
 
@@ -16,27 +18,7 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 
 // CORS
-const cors = require("cors");
-var whitelist = ["http://localhost:5173"];
-var corsOptionsDelegate = function (req, callback) {
-  var corsOptions;
-  if (whitelist.indexOf(req.header("Origin")) !== -1) {
-    corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false }; // disable CORS for this request
-  }
-  callback(null, corsOptions); // callback expects two parameters: error and options
-};
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  next();
-});
+app.use(cors(corsOptions));
 
 // Database
 // Mongodb
@@ -48,11 +30,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/user", userRouter);
-app.use("/api/v1/auth", cors(corsOptionsDelegate), authRouter);
+app.use("/api/v1/auth", authRouter);
 
 // Middleware error handling
 app.use(errorHandlingMiddleware);
 
-app.listen(port, () => {
-  // console.log(`app listening on port localhost:${port}`);
-});
+app.listen(port);
