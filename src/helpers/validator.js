@@ -34,6 +34,25 @@ const dataValidate = (schema) => {
   };
 };
 
+const filtersValidate = (schema) => {
+  return (req, res, next) => {
+    if (!req.body.filters)
+      return next(new ApiError(400, "Filters are undefined"));
+
+    const result = schema.validate(req.body.filters);
+    if (result.error) {
+      const errorMessage = result.error.details
+        .map((detail) => detail.message)
+        .join(", ");
+      return next(new ApiError(400, errorMessage));
+    } else {
+      if (!req.value) req.value = {};
+      req.value.filters = result.value;
+      next();
+    }
+  };
+};
+
 const paramsValidate = (schema) => {
   return (req, res, next) => {
     if (!req.params) return next(new ApiError(400, "Params are undefined"));
@@ -45,35 +64,36 @@ const paramsValidate = (schema) => {
         .join(", ");
       return next(new ApiError(400, errorMessage));
     } else {
+      if (!req.value) req.value = {};
       req.value.params = result.value;
       next();
     }
   };
 };
 
-// const schemas = {
-//   idSchema: Joi.object().keys({
-//     id: Joi.string()
-//       .regex(/^[0-9a-fA-F]{24}$/)
-//       .required(),
-//   }),
+const queryValidate = (schema) => {
+  return (req, res, next) => {
+    if (!req.query)
+      return next(new ApiError(400, "Query params are undefined"));
 
-//   userSchema: Joi.object().keys({
-//     email: Joi.string().email().lowercase().required(),
-//     password: Joi.string().min(4).max(32).required(),
-//     name: Joi.string().trim().required(),
-//   }),
-
-//   // dung cho truong hop update, request update chi co vai properties
-//   userOptionalSchema: Joi.object().keys({
-//     email: Joi.string().email().lowercase(),
-//     password: Joi.string().min(4).max(32),
-//     name: Joi.string().trim(),
-//   }),
-// };
+    const result = schema.validate(req.query);
+    if (result.error) {
+      const errorMessage = result.error.details
+        .map((detail) => detail.message)
+        .join(", ");
+      return next(new ApiError(400, errorMessage));
+    } else {
+      if (!req.value) req.value = {};
+      req.value.query = result.value;
+      next();
+    }
+  };
+};
 
 module.exports = {
+  filtersValidate,
   dataValidate,
   paramsValidate,
+  queryValidate,
   userValidate,
 };

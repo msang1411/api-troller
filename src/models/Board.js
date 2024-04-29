@@ -42,5 +42,13 @@ var schema = new Schema(
   }
 );
 
+schema.pre("save", function (next) {
+  // Update updateAt field to current timestamp
+  if (!this.isNew) {
+    this.updateAt = new Date();
+  }
+  next();
+});
+
 const Board = model("board", schema);
 module.exports = Board;
