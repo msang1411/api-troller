@@ -19,6 +19,25 @@ const createBoard = async (req, res, next) => {
   }
 };
 
+const deleteBoard = async (req, res, next) => {
+  try {
+    const result = await boardService.deleteBoard(req.value.params.id);
+
+    if (result.status === false)
+      return res.status(400).json({
+        statusCode: 400,
+        message: result.message,
+      });
+    else
+      return res.status(200).json({
+        statusCode: 200,
+        message: result.message,
+      });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getAllBoard = async (req, res, next) => {
   try {
     const result = await boardService.getBoardList(
@@ -28,6 +47,7 @@ const getAllBoard = async (req, res, next) => {
     );
 
     return res.status(200).json({
+      statusCode: 200,
       message: result.message,
       count: result.count,
       data: result.data,
@@ -42,10 +62,12 @@ const getBoardById = async (req, res, next) => {
     const result = await boardService.getBoardById(req.value.params.id);
     if (result.status === false)
       return res.status(400).json({
+        statusCode: 400,
         message: result.message,
       });
 
     return res.status(200).json({
+      statusCode: 200,
       message: result.message,
       data: result.board,
     });
@@ -63,6 +85,7 @@ const getBoardByPage = async (req, res, next) => {
     );
 
     return res.status(200).json({
+      statusCode: 200,
       message: result.message,
       count: result.count,
       limit: result.limit,
@@ -81,9 +104,10 @@ const updateBoard = async (req, res, next) => {
       req.value.body
     );
     if (result.status === false)
-      return res.status(400).json({ message: result.message });
+      return res.status(400).json({ statusCode: 400, message: result.message });
 
     return res.status(200).json({
+      statusCode: 200,
       message: result.message,
       data: result.board,
     });
@@ -94,6 +118,7 @@ const updateBoard = async (req, res, next) => {
 
 module.exports = {
   createBoard,
+  deleteBoard,
   getAllBoard,
   getBoardById,
   getBoardByPage,

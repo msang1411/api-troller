@@ -2,7 +2,7 @@ const { model, Schema, Types } = require("mongoose");
 
 var schema = new Schema(
   {
-    userId: {
+    boardId: {
       type: Types.ObjectId,
       required: true,
     },
@@ -11,21 +11,11 @@ var schema = new Schema(
       required: true,
       trim: true,
     },
-    description: {
-      type: String,
-    },
     createAt: {
       type: Date,
       default: Date.now,
     },
     updateAt: {
-      type: Date,
-    },
-    isDone: {
-      type: Boolean,
-      default: false,
-    },
-    doneAt: {
       type: Date,
     },
     isDelete: {
@@ -35,10 +25,9 @@ var schema = new Schema(
     deleteAt: {
       type: Date,
     },
-    member: [{ type: String, ref: "user" }],
   },
   {
-    collection: "board",
+    collection: "cardList",
   }
 );
 
@@ -51,5 +40,5 @@ schema.pre("save", function (next) {
   next();
 });
 
-const Board = model("board", schema);
-module.exports = Board;
+const CardList = model("cardList", schema);
+module.exports = CardList;

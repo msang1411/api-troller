@@ -17,6 +17,25 @@ const createBoard = async (board) => {
   }
 };
 
+const deleteBoard = async (boardId) => {
+  try {
+    const board = await Board.findById(boardId);
+    if (!board) return { status: false, message: "Board doesn't exist!" };
+    if (board.isDelete)
+      return { status: false, message: "Board has been deleted!" };
+
+    Object.assign(board, { isDelete: true, deleteAt: Date.now() });
+    await board.save();
+
+    return {
+      status: true,
+      message: "Board has deleted successfully!",
+    };
+  } catch (error) {
+    throw new ApiError(400, error.message);
+  }
+};
+
 const getBoardById = async (boardId) => {
   try {
     const board = await Board.findById(boardId);
@@ -69,6 +88,7 @@ const updateBoard = async (boardId, board) => {
 
 module.exports = {
   createBoard,
+  deleteBoard,
   getBoardById,
   getBoardList,
   updateBoard,

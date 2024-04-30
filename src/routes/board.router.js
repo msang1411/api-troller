@@ -25,6 +25,14 @@ router
   );
 
 router
+  .route("/delete/:id")
+  .delete(
+    paramsValidate(idSchema),
+    verifyAccessToken,
+    boardController.deleteBoard
+  );
+
+router
   .route("/get-all-board")
   .post(
     filtersValidate(boardFiltersSchema),

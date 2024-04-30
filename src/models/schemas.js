@@ -37,6 +37,30 @@ const boardUpdateSchema = Joi.object().keys({
   member: Joi.array(),
 });
 
+const cardListSchema = Joi.object().keys({
+  boardList: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required(),
+  name: Joi.string().trim().required(),
+  isDelete: Joi.boolean().default(false),
+});
+
+const cardListFiltersSchema = Joi.object().keys({
+  boardList: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+  name: Joi.string().trim(),
+  updateAt: Joi.date().iso(),
+  isDelete: Joi.boolean().default(false),
+  deleteAt: Joi.date().iso(),
+});
+
+const cardListUpdateSchema = Joi.object().keys({
+  boardList: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+  name: Joi.string().trim(),
+  updateAt: Joi.date().iso(),
+  isDelete: Joi.boolean(),
+  deleteAt: Joi.date().iso(),
+});
+
 const idSchema = Joi.object().keys({
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
@@ -54,7 +78,7 @@ const userSchema = Joi.object().keys({
   name: Joi.string().trim().required(),
 });
 
-// dung cho truong hop update, request update chi co vai properties
+// update user
 const userOptionalSchema = Joi.object().keys({
   email: Joi.string().email().lowercase(),
   password: Joi.string().min(4).max(32),
@@ -65,6 +89,9 @@ module.exports = {
   boardSchema,
   boardFiltersSchema,
   boardUpdateSchema,
+  cardListSchema,
+  cardListFiltersSchema,
+  cardListUpdateSchema,
   idSchema,
   paginationSchema,
   userSchema,
