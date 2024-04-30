@@ -7,63 +7,55 @@ const {
   queryValidate,
 } = require("../helpers/validator");
 const {
-  cardListSchema,
-  cardListFiltersSchema,
-  cardListUpdateSchema,
+  cardSchema,
+  cardFiltersSchema,
+  cardUpdateSchema,
   idSchema,
   paginationSchema,
 } = require("../models/schemas");
-const cardListController = require("../controllers/cardList.controller");
+const cardController = require("../controllers/card.controller");
 const { verifyAccessToken } = require("../authentication/authentication");
 
 router
   .route("/create")
-  .post(
-    dataValidate(cardListSchema),
-    verifyAccessToken,
-    cardListController.createCardList
-  );
+  .post(dataValidate(cardSchema), verifyAccessToken, cardController.createCard);
 
 router
   .route("/delete/:id")
   .delete(
     paramsValidate(idSchema),
     verifyAccessToken,
-    cardListController.deleteCardList
+    cardController.deleteCard
   );
 
 router
   .route("/get-all")
   .post(
-    filtersValidate(cardListFiltersSchema),
+    filtersValidate(cardFiltersSchema),
     verifyAccessToken,
-    cardListController.getAllCardList
+    cardController.getAllCard
   );
 
 router
   .route("/get-list")
   .post(
     queryValidate(paginationSchema),
-    filtersValidate(cardListFiltersSchema),
+    filtersValidate(cardFiltersSchema),
     verifyAccessToken,
-    cardListController.getCardListByPage
+    cardController.getCardByPage
   );
 
 router
   .route("/update/:id")
   .put(
     paramsValidate(idSchema),
-    dataValidate(cardListUpdateSchema),
+    dataValidate(cardUpdateSchema),
     verifyAccessToken,
-    cardListController.updateCardList
+    cardController.updateCard
   );
 
 router
   .route("/:id")
-  .get(
-    paramsValidate(idSchema),
-    verifyAccessToken,
-    cardListController.getCardListById
-  );
+  .get(paramsValidate(idSchema), verifyAccessToken, cardController.getCardById);
 
 module.exports = router;

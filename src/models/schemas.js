@@ -61,6 +61,36 @@ const cardListUpdateSchema = Joi.object().keys({
   deleteAt: Joi.date().iso(),
 });
 
+const cardSchema = Joi.object().keys({
+  cardListId: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required(),
+  name: Joi.string().trim().required(),
+  title: Joi.string().trim(),
+  description: Joi.string(),
+  isDelete: Joi.boolean().default(false),
+});
+
+const cardFiltersSchema = Joi.object().keys({
+  cardListId: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+  name: Joi.string().trim(),
+  title: Joi.string().trim(),
+  description: Joi.string(),
+  updateAt: Joi.date().iso(),
+  isDelete: Joi.boolean().default(false),
+  deleteAt: Joi.date().iso(),
+});
+
+const cardUpdateSchema = Joi.object().keys({
+  cardListId: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+  name: Joi.string().trim(),
+  title: Joi.string().trim(),
+  description: Joi.string(),
+  updateAt: Joi.date().iso(),
+  isDelete: Joi.boolean(),
+  deleteAt: Joi.date().iso(),
+});
+
 const idSchema = Joi.object().keys({
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
@@ -92,6 +122,9 @@ module.exports = {
   cardListSchema,
   cardListFiltersSchema,
   cardListUpdateSchema,
+  cardSchema,
+  cardFiltersSchema,
+  cardUpdateSchema,
   idSchema,
   paginationSchema,
   userSchema,

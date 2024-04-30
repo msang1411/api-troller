@@ -17,7 +17,7 @@ const boardController = require("../controllers/board.controller");
 const { verifyAccessToken } = require("../authentication/authentication");
 
 router
-  .route("/create-board")
+  .route("/create")
   .post(
     dataValidate(boardSchema),
     verifyAccessToken,
@@ -33,7 +33,7 @@ router
   );
 
 router
-  .route("/get-all-board")
+  .route("/get-all")
   .post(
     filtersValidate(boardFiltersSchema),
     verifyAccessToken,
@@ -41,7 +41,7 @@ router
   );
 
 router
-  .route("/get-list-board")
+  .route("/get-list")
   .post(
     queryValidate(paginationSchema),
     filtersValidate(boardFiltersSchema),

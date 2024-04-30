@@ -58,7 +58,7 @@ const getCardListList = async (limit, page, filters) => {
   const count = cardListList.length;
 
   return {
-    message: `Get board list by limit: ${limit}, page: ${page} successfully!`,
+    message: `Get card list by limit: ${limit}, page: ${page} successfully!`,
     count,
     limit,
     page,

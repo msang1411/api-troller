@@ -8,6 +8,7 @@ const userRouter = require("./routes/user.router");
 const authRouter = require("./routes/auth.router");
 const boardRouter = require("./routes/board.router");
 const cardListRouter = require("./routes/cardList.router");
+const cardRouter = require("./routes/card.router");
 
 // error
 const { errorHandlingMiddleware } = require("./middlewares/errorHandling");
@@ -31,6 +32,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/board", boardRouter);
 app.use("/api/v1/card-list", cardListRouter);
+app.use("/api/v1/card", cardRouter);
 
 // Middleware error handling
 app.use(errorHandlingMiddleware);
