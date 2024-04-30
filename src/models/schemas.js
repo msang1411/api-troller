@@ -38,7 +38,7 @@ const boardUpdateSchema = Joi.object().keys({
 });
 
 const cardListSchema = Joi.object().keys({
-  boardList: Joi.string()
+  boardId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
   name: Joi.string().trim().required(),
@@ -46,7 +46,7 @@ const cardListSchema = Joi.object().keys({
 });
 
 const cardListFiltersSchema = Joi.object().keys({
-  boardList: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+  boardId: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
   name: Joi.string().trim(),
   updateAt: Joi.date().iso(),
   isDelete: Joi.boolean().default(false),
@@ -54,7 +54,7 @@ const cardListFiltersSchema = Joi.object().keys({
 });
 
 const cardListUpdateSchema = Joi.object().keys({
-  boardList: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+  boardId: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
   name: Joi.string().trim(),
   updateAt: Joi.date().iso(),
   isDelete: Joi.boolean(),

@@ -1,8 +1,8 @@
-const boardService = require("../services/board.service");
+const cardListService = require("../services/cardList.service");
 
-const createBoard = async (req, res, next) => {
+const createCardList = async (req, res, next) => {
   try {
-    const result = await boardService.createBoard(req.value.body);
+    const result = await cardListService.createCardList(req.value.body);
     if (result.status === true) {
       return res.status(200).json({
         statusCode: 200,
@@ -19,9 +19,9 @@ const createBoard = async (req, res, next) => {
   }
 };
 
-const deleteBoard = async (req, res, next) => {
+const deleteCardList = async (req, res, next) => {
   try {
-    const result = await boardService.deleteBoard(req.value.params.id);
+    const result = await cardListService.deleteCardList(req.value.params.id);
 
     if (result.status === false)
       return res.status(400).json({
@@ -38,9 +38,9 @@ const deleteBoard = async (req, res, next) => {
   }
 };
 
-const getAllBoard = async (req, res, next) => {
+const getAllCardList = async (req, res, next) => {
   try {
-    const result = await boardService.getBoardList(
+    const result = await cardListService.getCardListList(
       null,
       null,
       req.value.filters
@@ -48,7 +48,7 @@ const getAllBoard = async (req, res, next) => {
 
     return res.status(200).json({
       statusCode: 200,
-      message: "Get all board successfully!",
+      message: "Get all card list successfully!",
       count: result.count,
       data: result.data,
     });
@@ -57,9 +57,9 @@ const getAllBoard = async (req, res, next) => {
   }
 };
 
-const getBoardById = async (req, res, next) => {
+const getCardListById = async (req, res, next) => {
   try {
-    const result = await boardService.getBoardById(req.value.params.id);
+    const result = await cardListService.getCardListById(req.value.params.id);
     if (result.status === false)
       return res.status(400).json({
         statusCode: 400,
@@ -69,16 +69,16 @@ const getBoardById = async (req, res, next) => {
     return res.status(200).json({
       statusCode: 200,
       message: result.message,
-      data: result.board,
+      data: result.data,
     });
   } catch (error) {
     next(error);
   }
 };
 
-const getBoardByPage = async (req, res, next) => {
+const getCardListByPage = async (req, res, next) => {
   try {
-    const result = await boardService.getBoardList(
+    const result = await cardListService.getCardListList(
       req.value.query.limit,
       req.value.query.page,
       req.value.filters
@@ -97,9 +97,9 @@ const getBoardByPage = async (req, res, next) => {
   }
 };
 
-const updateBoard = async (req, res, next) => {
+const updateCardList = async (req, res, next) => {
   try {
-    const result = await boardService.updateBoard(
+    const result = await cardListService.updateCardList(
       req.value.params.id,
       req.value.body
     );
@@ -109,7 +109,7 @@ const updateBoard = async (req, res, next) => {
     return res.status(200).json({
       statusCode: 200,
       message: result.message,
-      data: result.board,
+      data: result.data,
     });
   } catch (error) {
     next(error);
@@ -117,10 +117,10 @@ const updateBoard = async (req, res, next) => {
 };
 
 module.exports = {
-  createBoard,
-  deleteBoard,
-  getAllBoard,
-  getBoardById,
-  getBoardByPage,
-  updateBoard,
+  createCardList,
+  deleteCardList,
+  getAllCardList,
+  getCardListById,
+  getCardListByPage,
+  updateCardList,
 };
