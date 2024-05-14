@@ -53,6 +53,7 @@ const getCardListById = async (cardListId) => {
 
 const getCardListList = async (limit, page, filters) => {
   const cardListList = await CardList.find(filters)
+    .sort({ position: 1 })
     .skip((page - 1) * limit)
     .limit(limit);
   const count = cardListList.length;
@@ -85,10 +86,83 @@ const updateCardList = async (cardListId, cardList) => {
   }
 };
 
+const updateManyCardList = async (listCardList) => {
+  try {
+    if (!Array.isArray(listCardList)) {
+      throw new ApiError(400, "Input should be an array of card lists");
+    }
+
+    const updatePromises = listCardList.map((card) => {
+      const { _id, ...updateData } = card;
+      if (!_id) {
+        throw new ApiError(400, "Each card list must have an _id");
+      }
+      updateData.updateAt = new Date();
+
+      return CardList.findByIdAndUpdate(_id, updateData, { new: true });
+    });
+
+    const updatedCardLists = await Promise.all(updatePromises);
+    updatedCardLists.sort((a, b) => a.position - b.position);
+
+    return {
+      status: true,
+      message: "Card lists updated successfully",
+      data: updatedCardLists,
+    };
+  } catch (error) {
+    throw new ApiError(400, error.message);
+  }
+};
+
+const updatePositionCardList = async (id, newPosition) => {
+  try {
+    const cardListUpdate = await CardList.findById(id);
+    if (!cardListUpdate)
+      return { status: false, message: "CardList doesn't exist!" };
+    const oldPosition = cardListUpdate.position;
+    let positionStartChange = 0;
+
+    if (newPosition < oldPosition) {
+      const listCardListBehind = await CardList.find({
+        position: { $gte: newPosition, $lt: oldPosition },
+      }).sort({ position: 1 });
+
+      listCardListBehind.forEach(async (cardList) => {
+        cardList.position += 1;
+        await cardList.save();
+      });
+      positionStartChange = newPosition;
+    } else if (newPosition > oldPosition) {
+      const listCardListBehind = await CardList.find({
+        position: { $gt: oldPosition, $lte: newPosition },
+      }).sort({ position: 1 });
+
+      listCardListBehind.forEach(async (cardList) => {
+        cardList.position -= 1;
+        await cardList.save();
+      });
+      positionStartChange = oldPosition;
+    }
+
+    cardListUpdate.position = newPosition;
+    await cardListUpdate.save();
+
+    const data = await CardList.find({})
+      .sort({ position: 1 })
+      .skip(positionStartChange - 1);
+    return { status: true, message: "Update position success!", data };
+  } catch (error) {
+    throw new ApiError(400, error.message);
+  }
+};
+
 module.exports = {
   createCardList,
   deleteCardList,
   getCardListById,
   getCardListList,
   updateCardList,
+  updateManyCardList,
+  updatePositionCardList,
 };

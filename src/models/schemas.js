@@ -53,6 +53,13 @@ const cardListFiltersSchema = Joi.object().keys({
   deleteAt: Joi.date().iso(),
 });
 
+const cardListUpdatePosition = Joi.object().keys({
+  id: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required(),
+  position: Joi.number().required(),
+});
+
 const cardListUpdateSchema = Joi.object().keys({
   boardId: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
   name: Joi.string().trim(),
@@ -121,6 +128,7 @@ module.exports = {
   boardUpdateSchema,
   cardListSchema,
   cardListFiltersSchema,
+  cardListUpdatePosition,
   cardListUpdateSchema,
   cardSchema,
   cardFiltersSchema,

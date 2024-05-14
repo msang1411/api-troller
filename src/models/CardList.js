@@ -11,6 +11,9 @@ var schema = new Schema(
       required: true,
       trim: true,
     },
+    position: {
+      type: Number,
+    },
     createAt: {
       type: Date,
       default: Date.now,
@@ -31,13 +34,27 @@ var schema = new Schema(
   }
 );
 
-schema.pre("save", function (next) {
+schema.pre("save", async function (next) {
   // Update updateAt field to current timestamp
   if (!this.isNew) {
     if (this.isModified("isDelete") && this.isDelete) next();
     else this.updateAt = new Date();
+  } else {
+    try {
+      const maxPosition = await this.constructor
+        .findOne({}, { position: 1 })
+        .sort({ position: -1 })
+        .limit(1);
+      if (!maxPosition || !maxPosition.position) {
+        this.position = 1;
+      } else {
+        this.position = maxPosition.position + 1;
+      }
+      next();
+    } catch (error) {
+      next(error);
+    }
   }
-  next();
 });
 
 const CardList = model("cardList", schema);

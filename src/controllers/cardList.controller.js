@@ -116,6 +116,47 @@ const updateCardList = async (req, res, next) => {
   }
 };
 
+const updateManyCardList = async (req, res, next) => {
+  try {
+    const result = await cardListService.updateManyCardList(
+      req.body.listCardList
+    );
+    if (result.status === false)
+      return res.status(400).json({ statusCode: 400, message: result.message });
+
+    return res.status(200).json({
+      statusCode: 200,
+      message: result.message,
+      data: result.data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updatePositionCardList = async (req, res, next) => {
+  try {
+    const result = await cardListService.updatePositionCardList(
+      req.value.body.id,
+      req.value.body.position
+    );
+
+    if (result.status)
+      return res.status(200).json({
+        statusCode: 200,
+        message: result.message,
+        data: result.data,
+      });
+    else
+      return res.status(400).json({
+        statusCode: 400,
+        message: result.message,
+      });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createCardList,
   deleteCardList,
@@ -123,4 +164,6 @@ module.exports = {
   getCardListById,
   getCardListByPage,
   updateCardList,
+  updateManyCardList,
+  updatePositionCardList,
 };

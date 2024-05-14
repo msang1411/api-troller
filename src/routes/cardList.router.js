@@ -9,6 +9,7 @@ const {
 const {
   cardListSchema,
   cardListFiltersSchema,
+  cardListUpdatePosition,
   cardListUpdateSchema,
   idSchema,
   paginationSchema,
@@ -56,6 +57,18 @@ router
     dataValidate(cardListUpdateSchema),
     verifyAccessToken,
     cardListController.updateCardList
+  );
+
+router
+  .route("/update-many")
+  .put(verifyAccessToken, cardListController.updateManyCardList);
+
+router
+  .route("/update-position")
+  .put(
+    dataValidate(cardListUpdatePosition),
+    verifyAccessToken,
+    cardListController.updatePositionCardList
   );
 
 router
