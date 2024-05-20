@@ -120,8 +120,8 @@ const updatePositionCardList = async (id, newPosition) => {
     const cardListUpdate = await CardList.findById(id);
     if (!cardListUpdate)
       return { status: false, message: "CardList doesn't exist!" };
+
     const oldPosition = cardListUpdate.position;
-    let positionStartChange = 0;
 
     if (newPosition < oldPosition) {
       const listCardListBehind = await CardList.find({
@@ -132,7 +132,6 @@ const updatePositionCardList = async (id, newPosition) => {
         cardList.position += 1;
         await cardList.save();
       });
-      positionStartChange = newPosition;
     } else if (newPosition > oldPosition) {
       const listCardListBehind = await CardList.find({
         position: { $gt: oldPosition, $lte: newPosition },
@@ -142,15 +141,13 @@ const updatePositionCardList = async (id, newPosition) => {
         cardList.position -= 1;
         await cardList.save();
       });
-      positionStartChange = oldPosition;
+    } else {
+      return { status: false, message: "The new and old positions are equal!" };
     }
 
     cardListUpdate.position = newPosition;
     await cardListUpdate.save();
-
-    const data = await CardList.find({})
-      .sort({ position: 1 })
-      .skip(positionStartChange - 1);
+    const data = await CardList.find({}).sort({ position: 1 });
     return { status: true, message: "Update position success!", data };
   } catch (error) {
     throw new ApiError(400, error.message);
