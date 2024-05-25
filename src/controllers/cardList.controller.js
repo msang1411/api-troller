@@ -97,6 +97,21 @@ const getCardListByPage = async (req, res, next) => {
   }
 };
 
+const getCardListWithCard = async (req, res, next) => {
+  try {
+    const result = await cardListService.getCardListWithCard(req.value.filters);
+
+    return res.status(200).json({
+      statusCode: 200,
+      message: result.message,
+      count: result.count,
+      data: result.data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const updateCardList = async (req, res, next) => {
   try {
     const result = await cardListService.updateCardList(
@@ -163,6 +178,7 @@ module.exports = {
   getAllCardList,
   getCardListById,
   getCardListByPage,
+  getCardListWithCard,
   updateCardList,
   updateManyCardList,
   updatePositionCardList,

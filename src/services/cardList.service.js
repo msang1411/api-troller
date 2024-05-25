@@ -1,5 +1,6 @@
 const ApiError = require("../utils/ApiError");
 const CardList = require("../models/CardList");
+const Card = require("../models/Card");
 
 const createCardList = async (cardList) => {
   try {
@@ -65,6 +66,30 @@ const getCardListList = async (limit, page, filters) => {
     page,
     data: cardListList,
   };
+};
+
+const getCardListWithCard = async (filters) => {
+  try {
+    const listCardList = await CardList.find(filters)
+      .sort({ position: 1 })
+      .lean();
+    const count = listCardList.length;
+
+    let data = [];
+    for (const cardList of listCardList) {
+      const listCard = await Card.find({
+        cardListId: cardList._id,
+        isDelete: false,
+      });
+
+      cardList.cards = listCard;
+      data.push(cardList);
+    }
+
+    return { count, data, message: "Get card list successfully!" };
+  } catch (error) {
+    throw new ApiError(400, error.message);
+  }
 };
 
 const updateCardList = async (cardListId, cardList) => {
@@ -159,6 +184,7 @@ module.exports = {
   deleteCardList,
   getCardListById,
   getCardListList,
+  getCardListWithCard,
   updateCardList,
   updateManyCardList,
   updatePositionCardList,

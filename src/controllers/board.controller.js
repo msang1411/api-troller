@@ -57,6 +57,25 @@ const getAllBoard = async (req, res, next) => {
   }
 };
 
+const getAllDataBoard = async (req, res, next) => {
+  try {
+    const result = await boardService.getAllDataBoard(req.value.params.id);
+    if (result.status === false)
+      return res.status(400).json({
+        statusCode: 400,
+        message: result.message,
+      });
+
+    return res.status(200).json({
+      statusCode: 200,
+      message: result.message,
+      data: result.data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getBoardById = async (req, res, next) => {
   try {
     const result = await boardService.getBoardById(req.value.params.id);
@@ -120,6 +139,7 @@ module.exports = {
   createBoard,
   deleteBoard,
   getAllBoard,
+  getAllDataBoard,
   getBoardById,
   getBoardByPage,
   updateBoard,

@@ -46,7 +46,7 @@ schema.pre("save", async function (next) {
         .sort({ position: -1 })
         .limit(1);
       if (!maxPosition || !maxPosition.position) {
-        this.position = 1;
+        this.position = 0;
       } else {
         this.position = maxPosition.position + 1;
       }

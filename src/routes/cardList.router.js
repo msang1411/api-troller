@@ -51,6 +51,13 @@ router
   );
 
 router
+  .route("/get-list-with-card")
+  .post(
+    filtersValidate(cardListFiltersSchema),
+    cardListController.getCardListWithCard
+  );
+
+router
   .route("/update/:id")
   .put(
     paramsValidate(idSchema),

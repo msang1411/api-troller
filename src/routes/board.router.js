@@ -40,6 +40,12 @@ router
     boardController.getAllBoard
   );
 
+router.route("/get-all-data-board/:id").post(
+  paramsValidate(idSchema),
+  // verifyAccessToken,
+  boardController.getAllDataBoard
+);
+
 router
   .route("/get-list")
   .post(
