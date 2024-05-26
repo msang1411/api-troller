@@ -151,10 +151,7 @@ const updateManyCardList = async (req, res, next) => {
 
 const updatePositionCardList = async (req, res, next) => {
   try {
-    const result = await cardListService.updatePositionCardList(
-      req.value.body.id,
-      req.value.body.position
-    );
+    const result = await cardListService.updatePositionCardList(req.value.body);
 
     if (result.status)
       return res.status(200).json({

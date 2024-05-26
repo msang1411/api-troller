@@ -112,6 +112,42 @@ const updateCard = async (req, res, next) => {
   }
 };
 
+const updateManyCards = async (req, res, next) => {
+  try {
+    const result = await cardService.updateManyCards(req.body.cards);
+    if (result.status === false)
+      return res.status(400).json({ statusCode: 400, message: result.message });
+
+    return res.status(200).json({
+      statusCode: 200,
+      message: result.message,
+      data: result.data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updatePositionCard = async (req, res, next) => {
+  try {
+    const result = await cardService.updatePositionCard(req.value.body);
+
+    if (result.status)
+      return res.status(200).json({
+        statusCode: 200,
+        message: result.message,
+        data: result.data,
+      });
+    else
+      return res.status(400).json({
+        statusCode: 400,
+        message: result.message,
+      });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createCard,
   deleteCard,
@@ -119,4 +155,6 @@ module.exports = {
   getCardById,
   getCardByPage,
   updateCard,
+  updateManyCards,
+  updatePositionCard,
 };

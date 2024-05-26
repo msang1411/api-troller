@@ -10,6 +10,7 @@ const {
   cardSchema,
   cardFiltersSchema,
   cardUpdateSchema,
+  cardUpdatePositionSchema,
   idSchema,
   paginationSchema,
 } = require("../models/schemas");
@@ -28,13 +29,11 @@ router
     cardController.deleteCard
   );
 
-router
-  .route("/get-all")
-  .post(
-    filtersValidate(cardFiltersSchema),
-    verifyAccessToken,
-    cardController.getAllCard
-  );
+router.route("/get-all").post(
+  filtersValidate(cardFiltersSchema),
+  // verifyAccessToken,
+  cardController.getAllCard
+);
 
 router
   .route("/get-list")
@@ -53,6 +52,16 @@ router
     verifyAccessToken,
     cardController.updateCard
   );
+
+router
+  .route("/update-many")
+  .put(verifyAccessToken, cardController.updateManyCards);
+
+router.route("/update-position").put(
+  dataValidate(cardUpdatePositionSchema),
+  // verifyAccessToken,
+  cardController.updatePositionCard
+);
 
 router
   .route("/:id")

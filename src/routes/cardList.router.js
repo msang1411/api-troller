@@ -9,7 +9,7 @@ const {
 const {
   cardListSchema,
   cardListFiltersSchema,
-  cardListUpdatePosition,
+  cardListUpdatePositionSchema,
   cardListUpdateSchema,
   idSchema,
   paginationSchema,
@@ -73,7 +73,7 @@ router
 router
   .route("/update-position")
   .put(
-    dataValidate(cardListUpdatePosition),
+    dataValidate(cardListUpdatePositionSchema),
     verifyAccessToken,
     cardListController.updatePositionCardList
   );

@@ -53,11 +53,11 @@ const cardListFiltersSchema = Joi.object().keys({
   deleteAt: Joi.date().iso(),
 });
 
-const cardListUpdatePosition = Joi.object().keys({
+const cardListUpdatePositionSchema = Joi.object().keys({
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
-  position: Joi.number().required(),
+  newPosition: Joi.number().required(),
 });
 
 const cardListUpdateSchema = Joi.object().keys({
@@ -86,6 +86,16 @@ const cardFiltersSchema = Joi.object().keys({
   updateAt: Joi.date().iso(),
   isDelete: Joi.boolean().default(false),
   deleteAt: Joi.date().iso(),
+});
+
+const cardUpdatePositionSchema = Joi.object().keys({
+  id: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required(),
+  newCardListId: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required(),
+  newPosition: Joi.number().required(),
 });
 
 const cardUpdateSchema = Joi.object().keys({
@@ -128,10 +138,11 @@ module.exports = {
   boardUpdateSchema,
   cardListSchema,
   cardListFiltersSchema,
-  cardListUpdatePosition,
+  cardListUpdatePositionSchema,
   cardListUpdateSchema,
   cardSchema,
   cardFiltersSchema,
+  cardUpdatePositionSchema,
   cardUpdateSchema,
   idSchema,
   paginationSchema,

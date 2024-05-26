@@ -42,7 +42,7 @@ schema.pre("save", async function (next) {
   } else {
     try {
       const maxPosition = await this.constructor
-        .findOne({}, { position: 1 })
+        .findOne({ boardId: this.boardId }, { position: 1 })
         .sort({ position: -1 })
         .limit(1);
       if (!maxPosition || !maxPosition.position) {

@@ -140,30 +140,35 @@ const updateManyCardList = async (listCardList) => {
   }
 };
 
-const updatePositionCardList = async (id, newPosition) => {
+const updatePositionCardList = async ({ id, newPosition }) => {
   try {
     const cardListUpdate = await CardList.findById(id);
     if (!cardListUpdate)
       return { status: false, message: "CardList doesn't exist!" };
 
     const oldPosition = cardListUpdate.position;
+    let updatePosition = newPosition;
 
     if (newPosition < oldPosition) {
       const listCardListBehind = await CardList.find({
+        boardId: cardListUpdate.boardId,
         position: { $gte: newPosition, $lt: oldPosition },
       }).sort({ position: 1 });
 
       listCardListBehind.forEach(async (cardList) => {
-        cardList.position += 1;
+        cardList.position = updatePosition + 1;
+        updatePosition += 1;
         await cardList.save();
       });
     } else if (newPosition > oldPosition) {
       const listCardListBehind = await CardList.find({
+        boardId: cardListUpdate.boardId,
         position: { $gt: oldPosition, $lte: newPosition },
-      }).sort({ position: 1 });
+      }).sort({ position: -1 });
 
       listCardListBehind.forEach(async (cardList) => {
-        cardList.position -= 1;
+        cardList.position = updatePosition - 1;
+        updatePosition -= 1;
         await cardList.save();
       });
     } else {
@@ -172,7 +177,21 @@ const updatePositionCardList = async (id, newPosition) => {
 
     cardListUpdate.position = newPosition;
     await cardListUpdate.save();
-    const data = await CardList.find({}).sort({ position: 1 });
+    const cardLists = await CardList.find({ boardId: cardListUpdate.boardId })
+      .sort({ position: 1 })
+      .lean();
+
+    let data = [];
+    for (const cardList of cardLists) {
+      const listCard = await Card.find({
+        cardListId: cardList._id,
+        isDelete: false,
+      });
+
+      cardList.cards = listCard;
+      data.push(cardList);
+    }
+
     return { status: true, message: "Update position success!", data };
   } catch (error) {
     throw new ApiError(400, error.message);
